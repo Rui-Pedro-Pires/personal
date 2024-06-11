@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -242,6 +243,8 @@ class TipologyApiView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class InfoServiceApiView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         infoService = InfoService.objects.all()
         serializer = InfoServiceSerializer(infoService, many=True)
@@ -254,17 +257,39 @@ class InfoServiceApiView(APIView):
                 infoService = get_object_or_404(InfoService, id=kwargs['id'])
             except:
                 return Response(status=status.HTTP_200_OK)
-            try:
-                name = request.data.get('technician')
-                technician = get_object_or_404(Technician, name=name)
-                data = {
-                    "idTechnician": technician.id
-                }
-                serializer = InfoServiceSerializer(infoService, data=data)
-                if serializer.is_Valid():
+            name = request.data.get('technician')
+            ongoing = request.data.get('onGoing')
+            if not name:
+                if ongoing and ongoing == "True":
+                    data = {
+                        "onGoing": "True",
+                        "startDate": timezone.now()
+                    }
+                    serializer = InfoServiceSerializer(infoService, data=data, partial=True)
+                else:
+                    serializer = InfoServiceSerializer(infoService, data=request.data, partial=True)
+                if serializer.is_valid():
                     serializer.save()
                     return Response(serializer.data, status=status.HTTP_200_OK)
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            try:
+                technician = get_object_or_404(Technician, name=name)
             except:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+            if not ongoing:
+                ongoing = False
+                data = {
+                    "idTechnician": technician.id,
+                    "onGoing": ongoing,
+                }
+            elif ongoing == "True":
+                data = {
+                    "idTechnician": technician.id,
+                    "onGoing": ongoing,
+                    "startDate": timezone.now()
+                }
+            serializer = InfoServiceSerializer(infoService, data=data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

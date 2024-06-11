@@ -17,7 +17,7 @@ class Vehicle(models.Model):
     brand = models.CharField(max_length=20)
     model = models.CharField(max_length=20)
     km = models.IntegerField()
-    year = models.DateField(null=True)
+    year = models.IntegerField()
 
     def __str__(self):
         return self.plate
@@ -58,9 +58,9 @@ class InfoService(models.Model):
     idService = models.ForeignKey(Service, on_delete=models.CASCADE)
     idTechnician = models.ForeignKey(Technician, on_delete=models.CASCADE, blank=True, null=True)
     onGoing = models.BooleanField(default=False, blank=True)
-    startDate = models.DateTimeField(default=timezone.now, blank=True)
-    finishDate = models.DateTimeField(default=timezone.now, blank=True)
-    totalTime = models.IntegerField(blank=True, null=True)
+    startDate = models.DateTimeField(null=True, blank=True)
+    finishDate = models.DateTimeField(null=True, blank=True)
+    totalTime = models.DurationField(blank=True, null=True)
 
     def __str__(self):
         return str(self.id) + " is on going:" + str(self.onGoing)
