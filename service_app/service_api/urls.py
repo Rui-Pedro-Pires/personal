@@ -1,9 +1,9 @@
 from django.urls import path, include
 from .views import (
-    servicosApiView,
-    clienteApiView,
-    veiculosApiView,
-    servicos_totalApiView
+    ClientApiView,
+    VehicleApiView,
+    ServiceApiView,
+    EventApiView,
 )
 
 urlpatterns = [
