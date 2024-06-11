@@ -6,6 +6,7 @@ from .models import (
     Event,
     Technician,
     InfoService,
+    Tipology,
 )
 
 class ClientSerializer(serializers.ModelSerializer):
@@ -36,4 +37,9 @@ class TechnicianSerializer(serializers.ModelSerializer):
 class InfoServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = InfoService
+        fields = "__all__"
+
+class TipologySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tipology
         fields = "__all__"

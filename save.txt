@@ -1,24 +1,54 @@
 {
-"cliente": "rui",
-"matricula": "20-10-AB",
-"marca": "ford",
-"modelo": "mondeo",
-"km": 140000,
-"ano": "2004-10-20"
+    "client": "rui",
+    "plate": "20-10-AB",
+    "brand": "ford",
+    "model": "mondeo",
+    "km": 140000,
+    "year": "2004-10-20"
 }
 
 {
-"veiculo": "20-10-AB",
-"service": "lavar",
-"data_entrada": "2024-03-20",
-"hora_entrada": "2024-04-20",
-"data_saida": "2024-03-20",
-"hora_saida": "2024-04-20",
-"descricao": "lavar ate nao dar mais"
+    "client": "ines",
+    "telem": "916506677",
+    "email": "ines.pires999@gmail.com",
+    "plate": "20-10-AB",
+    "brand": "opel",
+    "model": "corsa",
+    "km": 1389,
+    "year": "2008-10-20"
+}
+
+
+{
+    "veiculo": "20-10-AB",
+    "data_entrada": "2024-03-20",
+    "hora_entrada": "2024-04-20",
+    "data_saida": "2024-03-20",
+    "hora_saida": "2024-04-20",
+    "descricao": "lavar ate nao dar mais"
 }
 
 {
-    "nome": "lavar",
-    "tempo": 20,
-    "obs": "lavar bem"
+    "type": "revisão",
+    "name": "mudar oleo",
+    "time": 30,
+    "description": "mudar oleo"
+}
+
+{
+    "name": "rui",
+    "telem": "911184620",
+    "email": "ruipedro.pires999@gmail.com"
+}
+
+{
+    "plate": "20-40-AC",
+    "services": [
+        "lavar",
+        "mudar oleo"
+    ],
+    "entry_date": "2024-12-20",
+    "entry_hour": "10:23:56",
+    "end_date": "2024-12-20",
+    "end_hour": "20:14:56"
 }
