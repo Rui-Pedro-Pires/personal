@@ -7,8 +7,8 @@ from .views import (
 )
 
 urlpatterns = [
-    path('servicos', servicosApiView.as_view()),
-    path('clientes', clienteApiView.as_view()),
-    path('veiculos', veiculosApiView.as_view()),
-    path('adicionar', servicos_totalApiView.as_view()),
+    path('client', ClientApiView.as_view()),
+    path('vehicle', VehicleApiView.as_view()),
+    path('service', ServiceApiView.as_view()),
+    path('event', EventApiView.as_view()),
 ]
