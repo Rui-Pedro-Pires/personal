@@ -55,10 +55,15 @@ class Technician(models.Model):
         return self.name
 
 class InfoService(models.Model):
+    ONGOING_CHOICE = (
+        ('1', 'por iniciar'),
+        ('2', 'a decorrer'),
+        ('3', 'Terminado')
+    )
     idEvent = models.ForeignKey(Event, on_delete=models.CASCADE)
     idService = models.ForeignKey(Service, on_delete=models.CASCADE)
     idTechnician = models.ForeignKey(Technician, on_delete=models.CASCADE, blank=True, null=True)
-    onGoing = models.BooleanField(default=False, blank=True)
+    onGoing = models.CharField(default=1, choices=ONGOING_CHOICE, max_length=180)
     startDate = models.DateTimeField(null=True, blank=True)
     finishDate = models.DateTimeField(null=True, blank=True)
     totalTime = models.DurationField(blank=True, null=True)

@@ -36,9 +36,12 @@ class TechnicianSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class InfoServiceSerializer(serializers.ModelSerializer):
+    plate = serializers.CharField(source='idEvent.vehicle.plate', read_only=True)
+    service = serializers.CharField(source='idService.name', read_only=True)
+    technician = serializers.CharField(source='idTechnician.name', read_only=True)
     class Meta:
         model = InfoService
-        fields = "__all__"
+        fields = ['id', 'plate', 'service', 'technician', 'onGoing', 'startDate', 'finishDate', 'totalTime']
 
 class TipologySerializer(serializers.ModelSerializer):
     class Meta:

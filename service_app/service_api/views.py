@@ -40,10 +40,7 @@ class ClientApiView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def put(self, request, *args, **kwargs):
-        try:
-            client = get_object_or_404(Client, id=kwargs['id'])
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        client = get_object_or_404(Client, id=kwargs['id'])
         serializer = ClientSerializer(client, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -51,26 +48,20 @@ class ClientApiView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, *args, **kwargs):
-        try:
-            client = get_object_or_404(Client, id=kwargs['id'])
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        client = get_object_or_404(Client, id=kwargs['id'])
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class VehicleApiView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        try:
-            if 'plate' in kwargs:
-                vehicle = get_object_or_404(Vehicle, plate=kwargs['plate'])
-                serializer = VehicleSerializer(vehicle)
-            else:
-                vehicle = Vehicle.objects.all()
-                serializer = VehicleSerializer(vehicle, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        if 'plate' in kwargs:
+            vehicle = get_object_or_404(Vehicle, plate=kwargs['plate'])
+            serializer = VehicleSerializer(vehicle)
+        else:
+            vehicle = Vehicle.objects.all()
+            serializer = VehicleSerializer(vehicle, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         client_name = request.data.get('client')
@@ -85,10 +76,7 @@ class VehicleApiView(APIView):
             serializer = ClientSerializer(data=data)
             if serializer.is_valid():
                 serializer.save()
-                try:
-                    client = get_object_or_404(Client, name=client_name)
-                except:
-                    return Response(status=status.HTTP_400_BAD_REQUEST)
+                client = get_object_or_404(Client, name=client_name)
         data = {
             "client": client.id,
             "plate": request.data.get('plate'),
@@ -112,23 +100,17 @@ class ServiceApiView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        try:
-            if 'type' in kwargs:
-                services = get_object_or_404(Service, type=kwargs['type'])
-                serializer = ServiceSerializer(services)
-            else:
-                services = Service.objects.all()
-                serializer = ServiceSerializer(services, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        if 'type' in kwargs:
+            services = get_object_or_404(Service, type=kwargs['type'])
+            serializer = ServiceSerializer(services)
+        else:
+            services = Service.objects.all()
+            serializer = ServiceSerializer(services, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request, *args, **kwargs):
         tipology_name = request.data.get('type')
-        try:
-            tipology = get_object_or_404(Tipology, type=tipology_name)
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        tipology = get_object_or_404(Tipology, type=tipology_name)
         data = {
             "idType":  tipology.id,
             "name": request.data.get('name'),
@@ -192,19 +174,16 @@ class CreateServiceApiView(APIView):
 
         event_id = serializer.instance.id
         for service in services:
-            try:
-                service_obj = get_object_or_404(Service, name=service)
-                data = {
+            service_obj = get_object_or_404(Service, name=service)
+            data = {
                     'idEvent': event_id,
                     'idService': service_obj.id,
-                }
-                serializer = InfoServiceSerializer(data=data)
-                if serializer.is_valid():
-                    serializer.save()
-                else:
-                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            except:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+            }
+            serializer = InfoServiceSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_201_CREATED)
 
 class TechnicianApiView(APIView):
@@ -223,10 +202,7 @@ class TechnicianApiView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, *args, **kwargs):
-        try:
-            technician = get_object_or_404(id=kwargs['id'])
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        technician = get_object_or_404(id=kwargs['id'])
         technician.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
@@ -243,6 +219,10 @@ class TipologyApiView(APIView):
 class InfoServiceApiView(APIView):
 
     def get(self, request, *args, **kwargs):
+        if 'id' in kwargs:
+            infoservice = InfoService.objects.filter(idEvent=kwargs['id'])
+            serializer = InfoServiceSerializer(infoservice, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         infoService = InfoService.objects.all()
         serializer = InfoServiceSerializer(infoService, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -250,17 +230,24 @@ class InfoServiceApiView(APIView):
 
     def put(self, request, *args, **kwargs):
         if 'id' in kwargs:
-            try:
-                infoService = get_object_or_404(InfoService, id=kwargs['id'])
-            except:
-                return Response(status=status.HTTP_200_OK)
+            infoService = get_object_or_404(InfoService, id=kwargs['id'])
             name = request.data.get('technician')
             ongoing = request.data.get('onGoing')
+            if ongoing and ongoing == "1":
+                return Response(status=status.HTTP_400_BAD_REQUEST)
             if not name:
-                if ongoing and ongoing == "True":
+                if ongoing and ongoing == "2":
                     data = {
-                        "onGoing": "True",
+                        "onGoing": ongoing,
                         "startDate": timezone.now()
+                    }
+                    serializer = InfoServiceSerializer(infoService, data=data, partial=True)
+                elif ongoing and ongoing == "3":
+                    totalTime = timezone.now() - infoService.startDate
+                    data = {
+                        "onGoing": ongoing,
+                        "finishDate": timezone.now(),
+                        "totalTime": totalTime
                     }
                     serializer = InfoServiceSerializer(infoService, data=data, partial=True)
                 else:
@@ -269,23 +256,25 @@ class InfoServiceApiView(APIView):
                     serializer.save()
                     return Response(serializer.data, status=status.HTTP_200_OK)
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            try:
-                technician = get_object_or_404(Technician, name=name)
-            except:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-            if not ongoing:
-                ongoing = False
-                data = {
-                    "idTechnician": technician.id,
-                    "onGoing": ongoing,
-                }
-            elif ongoing == "True":
+            technician = get_object_or_404(Technician, name=name)
+            if ongoing and ongoing == "2":
                 data = {
                     "idTechnician": technician.id,
                     "onGoing": ongoing,
                     "startDate": timezone.now()
                 }
-            serializer = InfoServiceSerializer(infoService, data=data, partial=True)
+                serializer = InfoServiceSerializer(infoService, data=data, partial=True)
+            elif ongoing and ongoing == "3":
+                totalTime = infoService.startDate - timezone.now()
+                data = {
+                    "idTechnician": technician.id,
+                    "onGoing": ongoing,
+                    "finishedDate": timezone.now(),
+                    "totalTime": totalTime
+                }
+                serializer = InfoServiceSerializer(infoService, data=data, partial=True)
+            else:
+                serializer = InfoServiceSerializer(infoService, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
