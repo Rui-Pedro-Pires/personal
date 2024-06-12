@@ -39,6 +39,7 @@ class Service(models.Model):
 
 class Event(models.Model):
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
+    obs = models.CharField(max_length=256, null=True)
     entry_date = models.DateField(default=datetime.now, null= False)
     start_hour = models.TimeField(default=timezone.now, null=False)
     end_date = models.DateField(default=datetime.now, null=False)

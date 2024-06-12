@@ -56,121 +56,28 @@ import "../styles/homeStyle.css"
 //   export default Home;
 
 
-function HomePage() {
-  const customers = [
-    {
-      id: 1,
-      name: "Ann Culhane",
-      status: "Open",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla...",
-      balance: "$70.00",
-      balanceCurrency: "CAD",
-      balanceChange: "-$270.00",
-      changeCurrency: "CAD",
-      total: "$500.00",
-      totalCurrency: "CAD",
-    },
-    {
-      id: 2,
-      name: "Ahmad Rosser",
-      status: "Paid",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla...",
-      balance: "$70.00",
-      balanceCurrency: "CAD",
-      balanceChange: "$270.00",
-      changeCurrency: "CAD",
-      total: "$500.00",
-      totalCurrency: "CAD",
-    },
-    {
-      id: 3,
-      name: "Zain Calzoni",
-      status: "Open",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla...",
-      balance: "$70.00",
-      balanceCurrency: "CAD",
-      balanceChange: "-$20.00",
-      changeCurrency: "CAD",
-      total: "$500.00",
-      totalCurrency: "CAD",
-    },
-    {
-      id: 4,
-      name: "Leo Stanton",
-      status: "Inactive",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla...",
-      balance: "$70.00",
-      balanceCurrency: "CAD",
-      balanceChange: "$600.00",
-      changeCurrency: "CAD",
-      total: "$500.00",
-      totalCurrency: "CAD",
-    },
-    {
-      id: 5,
-      name: "Kaiya Vetrovs",
-      status: "Open",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla...",
-      balance: "$70.00",
-      balanceCurrency: "CAD",
-      balanceChange: "-$350.00",
-      changeCurrency: "CAD",
-      total: "$500.00",
-      totalCurrency: "CAD",
-    },
-    {
-      id: 6,
-      name: "Ryan Westervelt",
-      status: "Paid",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla...",
-      balance: "$70.00",
-      balanceCurrency: "CAD",
-      balanceChange: "-$270.00",
-      changeCurrency: "CAD",
-      total: "$500.00",
-      totalCurrency: "CAD",
-    },
-    {
-      id: 7,
-      name: "Corey Stanton",
-      status: "Due",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla...",
-      balance: "$70.00",
-      balanceCurrency: "CAD",
-      balanceChange: "$30.00",
-      changeCurrency: "CAD",
-      total: "$500.00",
-      totalCurrency: "CAD",
-    },
-    {
-      id: 8,
-      name: "Adison Aminoff",
-      status: "Open",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla...",
-      balance: "$70.00",
-      balanceCurrency: "CAD",
-      balanceChange: "-$270.00",
-      changeCurrency: "CAD",
-      total: "$500.00",
-      totalCurrency: "CAD",
-    },
-    {
-      id: 9,
-      name: "Alfredo Aminoff",
-      status: "Inactive",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla...",
-      balance: "$70.00",
-      balanceCurrency: "CAD",
-      balanceChange: "$460.00",
-      changeCurrency: "CAD",
-      total: "$500.00",
-      totalCurrency: "CAD",
-    },
-  ];
+function HomePage({route}) {
+    const [events, setEvents] = useState([]);
+    const navigate = useNavigate();
+  
+        useEffect(() => {
+          const fetchEvents = async () => {
+            try {
+              const response = await api.get(route);
+              setEvents(response.data);
+            } catch (error) {
+              console.error("Failed to fetch events:", error);
+            }
+          };
+      
+          fetchEvents();
+        }, []);
 
   const handleSearch = () => {};
   const handleAddService = () => {};
-  const handleRowClick = (id) => () => {};
+  const handleRowClick = (id) => () => {
+    navigate(`/infoservice`);
+  };
 
   return (
     <>
@@ -193,39 +100,39 @@ function HomePage() {
           </div>
           <header className="header">
             <div className="header-left">
-              <div className="checkbox"></div>
-              <span className="status">Status</span>
               <span className="info-title">Plate</span>
               <span className="desc">Description</span>
             </div>
             <div className="header-right">
               <span className="info-title">Start Date</span>
               <span className="info-title">End Date</span>
-              <span className="info-title">Total Time</span>
+              <span className="info-title">Start Hour</span>
+              <span className="info-title">End Hour</span>
             </div>
           </header>
           <div className="table">
-            {customers.map((customer) => (
-              <button className="row" key={customer.id} onClick={handleRowClick(customer.id)}>
+            {events.map((event) => (
+              <button className="row" key={event.id} onClick={handleRowClick(event.id)}>
                 <div className="row-left">
-                  <div className="checkbox"></div>
-                  <span className="status">{customer.status}</span>
-                  <span className="desc">{customer.desc}</span>
+                  <div className="balance">
+                    <span className="amount">{event.vehicle_plate}</span>
+                  </div>
+                  <div className="balance">
+                    <span className="amount">{event.obs}</span>
+                  </div>
                 </div>
                 <div className="row-right">
                   <div className="balance">
-                    <span className="amount">{customer.balance}</span>
-                    <span className="price">{customer.balanceCurrency}</span>
+                    <span className="amount">{event.start_hour}</span>
                   </div>
-                  <div className="balance-change">
-                    <span className={customer.balanceChange.startsWith("-") ? "change" : "amount"}>
-                      {customer.balanceChange}
-                    </span>
-                    <span className="price">{customer.changeCurrency}</span>
+                  <div className="balance">
+                    <span className="amount">{event.end_date}</span>
                   </div>
-                  <div className="total-amount">
-                    <span className="amount">{customer.total}</span>
-                    <span className="total-price">{customer.totalCurrency}</span>
+                  <div className="balance">
+                    <span className="amount">{event.start_hour}</span>
+                  </div>
+                  <div className="balance">
+                    <span className="amount">{event.end_hour}</span>
                   </div>
                 </div>
               </button>
