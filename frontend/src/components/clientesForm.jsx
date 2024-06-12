@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import * as React from "react";
 
 function ClientesForm({ route }) {
-    const [nome, setNome] = useState("");
-    const [telemovel, setTelemovel] = useState("");
+    const [name, setName] = useState("");
+    const [telem, setTelem] = useState("");
     const [email, setEmail] = useState("");
     const navigate = useNavigate();
 
@@ -13,7 +13,7 @@ function ClientesForm({ route }) {
         e.preventDefault();
 
         try {
-            const res = await api.post(route, { nome, telemovel, email })
+            const res = await api.post(route, { name, telem, email })
             navigate("/")
         } catch (error) {
             alert(error)
@@ -24,11 +24,11 @@ function ClientesForm({ route }) {
         <form onSubmit={handleSubmit}>
             <label>
                 Nome:
-                <input type="text" value={nome} onChange={e => setNome(e.target.value)} />
+                <input type="text" value={name} onChange={e => setName(e.target.value)} />
             </label>
             <label>
                 Telemovel:
-                <input type="text" value={telemovel} onChange={e => setTelemovel(e.target.value)} />
+                <input type="text" value={telem} onChange={e => setTelem(e.target.value)} />
             </label>
             <label>
                 Email:

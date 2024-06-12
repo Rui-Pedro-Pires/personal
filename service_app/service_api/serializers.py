@@ -25,9 +25,10 @@ class ServiceSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class EventSerializer(serializers.ModelSerializer):
+    vehicle_plate = serializers.CharField(source='vehicle.plate', read_only=True)
     class Meta:
         model = Event
-        fields = "__all__"
+        fields = ['id', 'vehicle_plate', 'entry_date', 'start_hour', 'end_date', 'end_hour']
 
 class TechnicianSerializer(serializers.ModelSerializer):
     class Meta:
@@ -43,3 +44,10 @@ class TipologySerializer(serializers.ModelSerializer):
     class Meta:
         model = Tipology
         fields = "__all__"
+
+class HomeSerializer(serializers.ModelSerializer):
+    plate = serializers.CharField(source='idEvent.vehicle.plate', read_only=True)
+    
+    class Meta:
+        model = InfoService
+        fields = []

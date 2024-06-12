@@ -26,7 +26,6 @@ from .serializers import (
 # Create your views here.
 
 class ClientApiView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         clients = Client.objects.all()
@@ -143,7 +142,6 @@ class ServiceApiView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
     
 class CreateServiceApiView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         events = Event.objects.all()
@@ -293,3 +291,7 @@ class InfoServiceApiView(APIView):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# class HomeApiView(APIView):
+#     def get(self, request, *args, **kwargs):
