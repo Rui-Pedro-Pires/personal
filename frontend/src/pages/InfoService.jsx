@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
 import api from "../api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import * as React from "react";
 
-function Info({route}) {
-    const [events, setEvents] = useState([]);
-  
+function Info() {
+    const [eventsInfo, setEvents] = useState([]);
+    const location = useLocation();
+    const { id } = location.state || {};
     useEffect(() => {
       // Fetch events from the API
       const fetchEvents = async () => {
         try {
-          const response = await api.get(route);
+          const response = await api.get(`/service/infoservice/${id}`);
           console.log(response.data);
           setEvents(response.data);
         } catch (error) {
@@ -27,23 +28,25 @@ function Info({route}) {
         <table>
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Vehicle Plate</th>
-              <th>Entry Date</th>
-              <th>Start Hour</th>
-              <th>End Date</th>
-              <th>End Hour</th>
+              <th>idEvent</th>
+              <th>idService</th>
+              <th>idTechnician</th>
+              <th>onGoing</th>
+              <th>startDate</th>
+              <th>finishDate</th>
+              <th>totalTime</th>
             </tr>
           </thead>
           <tbody>
-            {events.map((event) => (
+            {eventsInfo.map((event) => (
               <tr key={event.id}>
-                <td>{event.id}</td>
-                <td>{event.vehicle_plate}</td>
-                <td>{event.entry_date}</td>
-                <td>{event.start_hour}</td>
-                <td>{event.end_date}</td>
-                <td>{event.end_hour}</td>
+                <td>{event.idEvent}</td>
+                <td>{event.idService}</td>
+                <td>{event.idTechnician}</td>
+                <td>{event.onGoing}</td>
+                <td>{event.startDate}</td>
+                <td>{event.finishDate}</td>
+                <td>{event.totalTime}</td>
               </tr>
             ))}
           </tbody>

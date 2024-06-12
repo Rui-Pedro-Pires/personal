@@ -241,7 +241,6 @@ class TipologyApiView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class InfoServiceApiView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         infoService = InfoService.objects.all()
