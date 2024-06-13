@@ -50,13 +50,24 @@ class TechnicianSerializer(serializers.ModelSerializer):
         model = Technician
         fields = "__all__"
 
+class InfoServicePutSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InfoService
+        fields = ['idTechnician']
+
 class InfoServiceSerializer(serializers.ModelSerializer):
     plate = serializers.CharField(source='idEvent.vehicle.plate', read_only=True)
     service = serializers.CharField(source='idService.name', read_only=True)
     technician = serializers.CharField(source='idTechnician.name', read_only=True)
+    technicians = serializers.SerializerMethodField()
     class Meta:
         model = InfoService
-        fields = ['id', 'plate', 'service', 'technician', 'onGoing', 'startDate', 'finishDate', 'totalTime']
+        fields = ['id', 'plate', 'service', 'technician', 'technicians', 'onGoing', 'startDate', 'finishDate', 'totalTime']
+
+    def get_technicians(self, obj):
+        technicians = Technician.objects.all()
+        serializer = TechnicianSerializer(technicians, many=True)
+        return serializer.data
 
 class TipologySerializer(serializers.ModelSerializer):
     class Meta:

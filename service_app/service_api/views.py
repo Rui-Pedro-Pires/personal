@@ -22,6 +22,7 @@ from .serializers import (
     TechnicianSerializer,
     TipologySerializer,
     InfoServiceSerializer,
+    InfoServicePutSerializer,
 )
 # Create your views here.
 
@@ -233,8 +234,6 @@ class InfoServiceApiView(APIView):
             infoService = get_object_or_404(InfoService, id=kwargs['id'])
             name = request.data.get('technician')
             ongoing = request.data.get('onGoing')
-            if ongoing and ongoing == "1":
-                return Response(status=status.HTTP_400_BAD_REQUEST)
             if not name:
                 if ongoing and ongoing == "2":
                     data = {
@@ -242,6 +241,9 @@ class InfoServiceApiView(APIView):
                         "startDate": timezone.now()
                     }
                     serializer = InfoServiceSerializer(infoService, data=data, partial=True)
+                    if serializer.is_valid():
+                        serializer.save()
+                        return Response(serializer.data, status=status.HTTP_200_OK)
                 elif ongoing and ongoing == "3":
                     totalTime = timezone.now() - infoService.startDate
                     data = {
@@ -250,36 +252,20 @@ class InfoServiceApiView(APIView):
                         "totalTime": totalTime
                     }
                     serializer = InfoServiceSerializer(infoService, data=data, partial=True)
-                else:
-                    serializer = InfoServiceSerializer(infoService, data=request.data, partial=True)
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response(serializer.data, status=status.HTTP_200_OK)
+                    if serializer.is_valid():
+                        serializer.save()
+                        return Response(serializer.data, status=status.HTTP_200_OK)
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             technician = get_object_or_404(Technician, name=name)
-            if ongoing and ongoing == "2":
+            if technician:
+                print(technician)
+                print(infoService.idTechnician)
                 data = {
                     "idTechnician": technician.id,
-                    "onGoing": ongoing,
-                    "startDate": timezone.now()
                 }
-                serializer = InfoServiceSerializer(infoService, data=data, partial=True)
-            elif ongoing and ongoing == "3":
-                totalTime = infoService.startDate - timezone.now()
-                data = {
-                    "idTechnician": technician.id,
-                    "onGoing": ongoing,
-                    "finishedDate": timezone.now(),
-                    "totalTime": totalTime
-                }
-                serializer = InfoServiceSerializer(infoService, data=data, partial=True)
-            else:
-                serializer = InfoServiceSerializer(infoService, data=request.data, partial=True)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                serializer = InfoServicePutSerializer(infoService, data=data, partial=True)
+                if serializer.is_valid():
+                    serializer.save()
+                    print(serializer.data)
+                    return Response(serializer.data, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# class HomeApiView(APIView):
-#     def get(self, request, *args, **kwargs):

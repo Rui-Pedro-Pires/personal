@@ -7,7 +7,7 @@ function NavbarComponent() {
     <>
       <Navbar bg="dark" data-bs-theme="dark">
         <Container>
-          <Navbar.Brand href="/">Navbar</Navbar.Brand>
+          <Navbar.Brand href="/">Fafediesel</Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="/services">Serviços</Nav.Link>
