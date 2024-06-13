@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import api from "../api";
 import { useNavigate, useLocation } from "react-router-dom";
 import * as React from "react";
-import Table from 'react-bootstrap/Table';
+import Table from "react-bootstrap/Table";
 
 function InfoDashboard() {
   const [eventsInfo, setEvents] = useState([]);
@@ -51,37 +51,37 @@ function InfoDashboard() {
       <thead>
         <tr>
           <th>Id</th>
-            <th>Plate</th>
-            <th>Service</th>
-            <th>Technician</th>
-            <th>OnGoing</th>
-            <th>Start Date</th>
-            <th>Finish Date</th>
-            <th>Total time</th>
+          <th>Plate</th>
+          <th>Service</th>
+          <th>Technician</th>
+          <th>OnGoing</th>
+          <th>Start Date</th>
+          <th>Finish Date</th>
+          <th>Total time</th>
         </tr>
       </thead>
       <tbody>
         {eventsInfo?.map((event) => (
-            <tr>
-              <th scope="row" key={event.id}>{event.id}</th>
-              <td>{event.plate}</td>
-              <td>{event.service}</td>
-              <td>{event.technician}</td>
-              <td>
-                <select
-                  value={event.onGoing}
-                  onChange={(e) => handleOnGoingChange(e, event.id)}
-                >
-                  <option value="1">Por começar</option>
-                  <option value="2">A decorrer</option>
-                  <option value="3">Terminado</option>
-                </select>
-              </td>
-              <td>{event.startDate}</td>
-              <td>{event.finishDate}</td>
-              <td>{event.totalTime}</td>
-            </tr>
-          ))}
+          <tr key={event.id}>
+            <th scope="row">{event.id}</th>
+            <td>{event.plate}</td>
+            <td>{event.service}</td>
+            <td>{event.technician}</td>
+            <td>
+              <select
+                value={event.onGoing}
+                onChange={(e) => handleOnGoingChange(e, event.id)}
+              >
+                <option value="1">Por começar</option>
+                <option value="2">A decorrer</option>
+                <option value="3">Terminado</option>
+              </select>
+            </td>
+            <td>{event.startDate}</td>
+            <td>{event.finishDate}</td>
+            <td>{event.totalTime}</td>
+          </tr>
+        ))}
       </tbody>
     </Table>
   );

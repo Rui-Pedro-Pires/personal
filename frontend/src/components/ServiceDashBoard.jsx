@@ -8,7 +8,6 @@ import Table from "react-bootstrap/esm/Table";
 function ServiceDashBoard() {
   const [events, setEvents] = useState([]);
   const navigate = useNavigate();
-  const serviceStatus = []
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -17,16 +16,6 @@ function ServiceDashBoard() {
       } catch (error) {
         console.error("Failed to fetch events:", error);
       }
-      let events = response.data();
-      for (i = 0; i < events.length(); i++)
-        {
-          try {
-            const response = api.get(`/service/infoservice/${events.id}`);
-            console.log(response.data.length())
-          } catch (error) { 
-            console.error("Failed to fetch the service: ", error);
-          }
-        }
     };
     fetchEvents();
   }, []);
@@ -43,9 +32,9 @@ function ServiceDashBoard() {
           <th>Plate</th>
           <th>Description</th>
           <th>Start Date</th>
-          <th>End Date</th>
           <th>Start Hour</th>
-          <th>end Hour</th>
+          <th>End Date</th>
+          <th>End Hour</th>
           <th>Status</th>
         </tr>
       </thead>
@@ -55,14 +44,14 @@ function ServiceDashBoard() {
             <th scope="row" key={event.id}>
               {event.id}
             </th>
-            <td>{event.vehicle_plate}</td>
-            <td>{event.obs}</td>
-            <td>{event.start_date}</td>
-            <td>{event.end_date}</td>
+            <td className="text-nowrap">{event.vehicle_plate}</td>
+            <td className="col-4">{event.obs}</td>
+            <td>{event.entry_date}</td>
             <td>{event.start_hour}</td>
+            <td>{event.end_date}</td>
             <td>{event.end_hour}</td>
             <td>
-              <ProgressBarComponent percen={50} />
+              <ProgressBarComponent percen={event.percent} />
             </td>
           </tr>
         ))}

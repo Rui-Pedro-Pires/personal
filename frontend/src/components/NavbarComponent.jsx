@@ -11,6 +11,7 @@ function NavbarComponent() {
           <Nav className="me-auto">
             <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="/services">Serviços</Nav.Link>
+            <Nav.Link href="/newservice">Novo serviço</Nav.Link>
             <Nav.Link href="/tecnicos">Técnicos</Nav.Link>
           </Nav>
         </Container>

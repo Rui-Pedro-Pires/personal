@@ -26,9 +26,24 @@ class ServiceSerializer(serializers.ModelSerializer):
 
 class EventSerializer(serializers.ModelSerializer):
     vehicle_plate = serializers.CharField(source='vehicle.plate', read_only=True)
+    percent = serializers.SerializerMethodField()
+
     class Meta:
         model = Event
-        fields = ['id', 'vehicle_plate', 'obs', 'entry_date', 'start_hour', 'end_date', 'end_hour']
+        fields = ['id', 'vehicle_plate', 'obs', 'entry_date', 'start_hour', 'end_date', 'end_hour', 'percent']
+
+    def get_services_count(self, obj):
+        return InfoService.objects.filter(idEvent=obj).count()
+    
+    def get_services_completed(self, obj):
+        return InfoService.objects.filter(idEvent=obj, onGoing="3").count()
+
+    def get_percent(self, obj):
+        total = self.get_services_count(obj)
+        completed = self.get_services_completed(obj)
+        if total > 0:  # Prevent division by zero
+            return (completed / total) * 100
+        return 0
 
 class TechnicianSerializer(serializers.ModelSerializer):
     class Meta:
